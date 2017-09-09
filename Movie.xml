@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<movie width="220" height="28" framerate="30">
+	<background color="#ffffff"/>
+	<frame>
+		<clip import="BooBar_classes.swf" />
+		<library>
+			<clip id="appBar" class="com.boobar.Controller" />
+			<clip id="BooBarIcon" import="BarIconTransparent.png"/>
+			<clip id="BooBarHelp" import="questionButton.png"/>
+			<font id="tahoma" import="fonts/tahoma.ttf" name="Tahoma "/>
+		</library>
+		<place id="appBar" name="appBar" depth="100" />
+		<place id="BooBarIcon" name="BooBarIcon" depth="101" />
+	</frame>
+</movie>
