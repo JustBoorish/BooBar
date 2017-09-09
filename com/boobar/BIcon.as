@@ -200,9 +200,7 @@ class com.boobar.BIcon
 			var tooltipData:TooltipData = new TooltipData();
 			tooltipData.AddAttribute("", "<font face='_StandardFont' size='13' color='#FF8000'><b>BooBar v" + m_version + " by Boorish</b></font>");
 			tooltipData.AddAttributeSplitter();
-			tooltipData.AddAttribute("", "<font face='_StandardFont' size='12' color='#FFFFFF'>Left click to choose a sprint</font>");
-			tooltipData.AddAttribute("", "<font face='_StandardFont' size='12' color='#FFFFFF'>Shift+Left click to toggle auto sprint</font>");
-			tooltipData.AddAttribute("", "<font face='_StandardFont' size='12' color='#FFFFFF'>Right click for options</font>");
+			tooltipData.AddAttribute("", "<font face='_StandardFont' size='12' color='#FFFFFF'>Left click for options</font>");
 			tooltipData.m_Padding = 4;
 			tooltipData.m_MaxWidth = 210;
 			m_tooltip = TooltipManager.GetInstance().ShowTooltip(undefined, TooltipInterface.e_OrientationVertical, 0, tooltipData);
