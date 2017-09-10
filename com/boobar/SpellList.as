@@ -90,7 +90,7 @@ class com.boobar.SpellList implements ITabPane
 		m_groupPopup.SetCoords(Stage.width / 2, Stage.height / 2);
 		
 		m_specialGroupPopup = new PopupMenu(m_addonMC, "SpecialGroupPopup", 6);
-		m_specialGroupPopup.AddItem("Edit", Delegate.create(this, EditSpecialGroup));
+		m_specialGroupPopup.AddItem("Edit", Delegate.create(this, EditGroup));
 		m_specialGroupPopup.Rebuild();
 		m_specialGroupPopup.SetCoords(Stage.width / 2, Stage.height / 2);
 		
@@ -487,24 +487,13 @@ class com.boobar.SpellList implements ITabPane
 		return true;
 	}
 	
-	private function EditSpecialGroup(groupID:String):Void
-	{
-		m_currentGroup = FindGroupByID(groupID);
-		if (m_currentGroup != null)
-		{
-			UnloadDialogs();
-			m_editGroupDialog = new EditGroupDialog("EditGroup", m_parent, m_currentGroup.GetName(), m_currentGroup.GetColourName(), m_currentGroup.GetScreenFlash(), false);
-			m_editGroupDialog.Show(Delegate.create(this, EditGroupCB));
-		}
-	}
-	
 	private function EditGroup(groupID:String):Void
 	{
 		m_currentGroup = FindGroupByID(groupID);
 		if (m_currentGroup != null)
 		{
 			UnloadDialogs();
-			m_editGroupDialog = new EditGroupDialog("EditGroup", m_parent, m_currentGroup.GetName(), m_currentGroup.GetColourName(), m_currentGroup.GetScreenFlash(), true);
+			m_editGroupDialog = new EditGroupDialog("EditGroup", m_parent, m_currentGroup.GetName(), m_currentGroup.GetColourName(), m_currentGroup.GetScreenFlash());
 			m_editGroupDialog.Show(Delegate.create(this, EditGroupCB));
 		}
 	}
@@ -550,7 +539,7 @@ class com.boobar.SpellList implements ITabPane
 		if (m_currentGroup != null)
 		{
 			UnloadDialogs();
-			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, "", Colours.GRAY, false, true);
+			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, "", Colours.GREY, false);
 			m_editGroupDialog.Show(Delegate.create(this, AddGroupAboveCB));
 		}
 	}
@@ -597,7 +586,7 @@ class com.boobar.SpellList implements ITabPane
 		if (m_currentGroup != null)
 		{
 			UnloadDialogs();
-			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, "", Colours.GRAY, false, true);
+			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, "", Colours.GREY, false);
 			m_editGroupDialog.Show(Delegate.create(this, AddGroupBelowCB));
 		}
 	}

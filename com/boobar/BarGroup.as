@@ -183,6 +183,7 @@ class com.boobar.BarGroup
 		{
 			var name:String = GetArchiveEntry(prefix, archive, BarGroup.NAME_PREFIX, null);
 			var colourName:String = GetArchiveEntry(prefix, archive, BarGroup.COLOUR_PREFIX, null);
+			if (colourName == "Gray") colourName = Colours.GREY; // TEMP
 			var tempFlash:String = GetArchiveEntry(prefix, archive, BarGroup.FLASH_PREFIX, "0");
 			var screenFlash:Boolean = tempFlash == "1";
 			ret = new BarGroup(id, name, colourName, screenFlash);

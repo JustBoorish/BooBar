@@ -23,7 +23,7 @@ class com.boocommon.Colours
 	public static var YELLOW:String = "Yellow";
 	public static var ORANGE:String = "Orange";
 	public static var PURPLE:String = "Purple";
-	public static var GRAY:String = "Gray";
+	public static var GREY:String = "Grey";
 	
 	public static function GetColourArray(colourName:String):Array
 	{
@@ -55,12 +55,12 @@ class com.boocommon.Colours
 	
 	public static function GetColourNames():Array
 	{
-		return [ RED, BLUE, AQUA, GREEN, YELLOW, ORANGE, PURPLE, GRAY ];
+		return [ RED, BLUE, AQUA, GREEN, YELLOW, ORANGE, PURPLE, GREY ];
 	}
 	
 	public static function GetDefaultColourName():String
 	{
-		return GRAY;
+		return GREY;
 	}
 	
 	public static function GetDefaultColourArray():Array

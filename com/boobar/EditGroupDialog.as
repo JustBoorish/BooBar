@@ -28,7 +28,6 @@ class com.boobar.EditGroupDialog
 	private var m_groupName:String;
 	private var m_colourName:String;
 	private var m_screenFlash:Boolean;
-	private var m_showFlash:Boolean;
 	private var m_menu:MenuPanel;
 	private var m_callback:Function;
 	private var m_input:TextField;
@@ -36,12 +35,11 @@ class com.boobar.EditGroupDialog
 	private var m_colourY:Number;
 	private var m_flashCheck:Checkbox;
 	
-	public function EditGroupDialog(name:String, parent:MovieClip, groupName:String, colourName:String, screenFlash:Boolean, showFlash:Boolean) 
+	public function EditGroupDialog(name:String, parent:MovieClip, groupName:String, colourName:String, screenFlash:Boolean) 
 	{
 		m_groupName = groupName;
 		m_colourName = colourName;
 		m_screenFlash = screenFlash;
-		m_showFlash = showFlash;
 		
 		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), 0.95);
 		var modalMC:MovieClip = m_modalBase.GetMovieClip();
@@ -100,16 +98,12 @@ class com.boobar.EditGroupDialog
 		var y:Number = input._y + input._height + 15;
 		var checkSize:Number = 13;
 		m_flashCheck = new Checkbox("FlashCheck", modalMC, 30, y, checkSize, null, m_screenFlash);
-		m_flashCheck.SetVisible(m_showFlash);
 		
-		if (m_showFlash == true)
-		{
-			var text2:String = "Flash screen";
-			var hiddenExtents:Object;
-			hiddenExtents = Text.GetTextExtent(text2, m_textFormat, modalMC);
-			Graphics.DrawText("Line2", modalMC, text2, m_textFormat, 40 + checkSize, y + checkSize / 2 - hiddenExtents.height / 2, hiddenExtents.width, hiddenExtents.height);
-			y += hiddenExtents.height + 10;
-		}
+		var text2:String = "Flash screen";
+		var hiddenExtents:Object;
+		hiddenExtents = Text.GetTextExtent(text2, m_textFormat, modalMC);
+		Graphics.DrawText("Line2", modalMC, text2, m_textFormat, 40 + checkSize, y + checkSize / 2 - hiddenExtents.height / 2, hiddenExtents.width, hiddenExtents.height);
+		y += hiddenExtents.height + 10;
 		
 		m_colourX = 30;
 		m_colourY = y;

@@ -37,7 +37,7 @@ import mx.utils.Delegate;
  */
 class com.boobar.Controller extends MovieClip
 {
-	private static var VERSION:String = "0.5";
+	private static var VERSION:String = "0.6";
 	private static var SETTINGS_PREFIX:String = "BOOBAR";
 	private static var MAX_GROUPS:Number = 75;
 	private static var MAX_SPELLS:Number = 250;
@@ -142,7 +142,7 @@ class com.boobar.Controller extends MovieClip
 	{
 		if (m_groups.length == 0)
 		{
-			m_groups.push(new BarGroup(BarGroup.GetNextID(m_groups), "Uninterruptable", Colours.GRAY, false));
+			m_groups.push(new BarGroup(BarGroup.GetNextID(m_groups), "Uninterruptable", Colours.GREY, false));
 			m_groups.push(new BarGroup(BarGroup.GetNextID(m_groups), "Interruptable", Colours.AQUA, false));
 			
 			m_spells = new Object();
@@ -150,13 +150,14 @@ class com.boobar.Controller extends MovieClip
 			m_groups.push(specialInterruptGroup);
 			
 			AddKnownSpell("Charged Hack", "", specialInterruptGroup.GetID());
-			AddKnownSpell("Mjolnir's Hammer", "", specialInterruptGroup.GetID());
+			AddKnownSpell("Mjolnir's Echo", "", specialInterruptGroup.GetID());
 			AddKnownSpell("Searing Brand", "", specialInterruptGroup.GetID());
 			AddKnownSpell("Itzama's Wrath", "", specialInterruptGroup.GetID());
-			AddKnownSpell("Hot Iron", "", specialInterruptGroup.GetID());
+			AddKnownSpell("Rot Iron", "", specialInterruptGroup.GetID());
 			AddKnownSpell("Painwheel Overdrive", "", specialInterruptGroup.GetID());
 			AddKnownSpell("Demolish", "", specialInterruptGroup.GetID());
 			AddKnownSpell("Chirugy", "Cassius", specialInterruptGroup.GetID());
+			AddKnownSpell("Concuss", "", specialInterruptGroup.GetID());
 			
 			var specialPurgeGroup:BarGroup = new BarGroup(BarGroup.GetNextID(m_groups), "Special Purges", Colours.PURPLE, true);
 			m_groups.push(specialPurgeGroup);
@@ -168,6 +169,8 @@ class com.boobar.Controller extends MovieClip
 			m_groups.push(specialOtherGroup);
 			
 			AddKnownSpell("Deep Calling", "", specialOtherGroup.GetID());
+			AddKnownSpell("Drink Deep", "", specialOtherGroup.GetID());
+			AddKnownSpell("Molten Metal", "", specialOtherGroup.GetID());
 			AddKnownSpell("Synapse Spasm", "", specialOtherGroup.GetID());
 		}
 	}
@@ -307,7 +310,7 @@ class com.boobar.Controller extends MovieClip
 		{
 			m_optionsTab = new OptionsTab("Options", m_settings);
 			m_spellTab = new SpellList("Spells", m_groups, m_spells, m_settings);
-			m_configWindow = new TabWindow(m_mc, "BooBar", m_settings[Settings.X], m_settings[Settings.Y], 320, 200, Delegate.create(this, ConfigClosed), "BooBuildsHelp", "https://tswact.wordpress.com/boobar/");
+			m_configWindow = new TabWindow(m_mc, "BooBar", m_settings[Settings.X], m_settings[Settings.Y], 320, 200, Delegate.create(this, ConfigClosed), "BooBarHelp", "https://tswact.wordpress.com/boobar/");
 			m_configWindow.AddTab("Spells", m_spellTab);
 			m_configWindow.AddTab("Options", m_optionsTab);
 			m_configWindow.SetVisible(true);

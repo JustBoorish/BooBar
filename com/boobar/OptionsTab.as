@@ -150,17 +150,17 @@ class com.boobar.OptionsTab implements ITabPane
 		extents = Text.GetTextExtent(text, textFormat, m_frame);
 		row = 3;
 		y = 35 + (5 + 2 * extents.height) * row;
-		Graphics.DrawButton("CenterBar", m_frame, text, textFormat, 25, y, extents.width, Colours.GetColourArray(Colours.GRAY), Delegate.create(this, CenterBar));
+		Graphics.DrawButton("CenterBar", m_frame, text, textFormat, 25, y, extents.width, Colours.GetColourArray(Colours.GREY), Delegate.create(this, CenterBar));
 
 		text = "Show draggable bar";
 		row = 2;
 		y = 35 + (5 + 2 * extents.height) * row;
-		m_showBar = Graphics.DrawButton("MoveBar", m_frame, text, textFormat, 25, y, extents.width, Colours.GetColourArray(Colours.GRAY), Delegate.create(this, MoveBar));
+		m_showBar = Graphics.DrawButton("MoveBar", m_frame, text, textFormat, 25, y, extents.width, Colours.GetColourArray(Colours.GREY), Delegate.create(this, MoveBar));
 		
 		text = "Hide draggable bar";
 		row = 2;
 		y = 35 + (5 + 2 * extents.height) * row;
-		m_hideBar = Graphics.DrawButton("HideBar", m_frame, text, textFormat, 25, y, extents.width, Colours.GetColourArray(Colours.GRAY), Delegate.create(this, HideBar));
+		m_hideBar = Graphics.DrawButton("HideBar", m_frame, text, textFormat, 25, y, extents.width, Colours.GetColourArray(Colours.GREY), Delegate.create(this, HideBar));
 
 		m_fontSizeCombo = new ComboBox(m_frame, "FontSizeCombo", addonMC, comboX, comboY, null, null, 6, String(Settings.GetBarFontSize(m_settings)), sizes);
 		m_fontSizeCombo.SetChangedCallback(Delegate.create(this, FontSizeChanged));

@@ -56,7 +56,7 @@ class com.boobar.Castbar
 		var height:Number = extents.height + extents.height * 0.05 + 4;
 		
 		m_scaleFrame = m_frame.createEmptyMovieClip("ScaleFrame", m_frame.getNextHighestDepth());
-		m_dragBar = CreateBar("DragBar", width, height, Colours.GetColourArray(Colours.GRAY));
+		m_dragBar = CreateBar("DragBar", width, height, Colours.GetColourArray(Colours.GREY));
 		
 		m_bars = new Array();
 		m_flashes = new Array();
@@ -79,7 +79,7 @@ class com.boobar.Castbar
 		
 		m_scaleWidth = m_scaleFrame._width;
 		
-		Graphics.DrawRoundedRectangle(m_frame, 0x000000, 2, 0, 0, width, height);
+		Graphics.DrawFilledRoundedRectangle(m_frame, 0x000000, 2, 0x000000, 50, 0, 0, width, height);
 		
 		m_frame._x = x;
 		m_frame._y = y;

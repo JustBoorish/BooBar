@@ -10,6 +10,7 @@ Unpack the BooBar directory into \Data\Gui\Customized\Flash\ located in the root
 
 PLEASE NOTE: Make sure you restart your client after installing this add-on. Always restart your client when adding XML files as these only get read on load.
 
+Once you are happy with the castbar you can turn off the in game castbar be unchecking the "Interface Options->HUD Display->Show target castbar" option in SWL.
 
 *** How to uninstall ***
 
