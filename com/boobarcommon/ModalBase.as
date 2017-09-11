@@ -1,5 +1,5 @@
-import com.boocommon.DebugWindow;
-import com.boocommon.Graphics;
+import com.boobarcommon.DebugWindow;
+import com.boobarcommon.Graphics;
 import caurina.transitions.Tweener;
 import com.Utils.Colors;
 import com.Utils.ID32;
@@ -23,7 +23,7 @@ import org.sitedaniel.utils.Proxy;
  * 
  * Author: Boorish
  */
-class com.boocommon.ModalBase
+class com.boobarcommon.ModalBase
 {
 	private var m_blocker:MovieClip;
 	private var m_modal:MovieClip;
@@ -35,7 +35,7 @@ class com.boocommon.ModalBase
 	private var m_input:TextField;
 	private var m_drawFrameCallback:Function;
 	
-	public function ModalBase(name:String, parent:MovieClip, drawFrameCallback:Function, frameHeight:Number, frameWidth:Number) 
+	public function ModalBase(name:String, parent:MovieClip, drawFrameCallback:Function, frameWidth:Number, frameHeight:Number) 
 	{
 		m_drawFrameCallback = drawFrameCallback;
 		
@@ -59,7 +59,7 @@ class com.boocommon.ModalBase
 		}
 		else
 		{
-			m_maxWidth = parent._width * frameWidth;
+			m_maxWidth = frameWidth;
 		}
 		
 		if (frameHeight == null)
@@ -68,8 +68,19 @@ class com.boocommon.ModalBase
 		}
 		else
 		{
-			m_maxHeight = parent._height * frameHeight;
+			m_maxHeight = frameHeight;
 		}
+		
+		if (m_maxWidth > parent._width)
+		{
+			m_maxWidth = parent._width;
+		}
+		
+		if (m_maxHeight > parent._height)
+		{
+			m_maxHeight = parent._height;
+		}
+		
 		m_modal = parent.createEmptyMovieClip(name, parent.getNextHighestDepth());
 		m_textFormat = new TextFormat();
 		m_textFormat.align = "left";

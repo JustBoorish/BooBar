@@ -1,5 +1,5 @@
-import com.boocommon.InfoWindow;
-import com.boocommon.IntervalCounter;
+import com.boobarcommon.InfoWindow;
+import com.boobarcommon.IntervalCounter;
 import com.GameInterface.Game.BuffData;
 import com.GameInterface.Game.Character;
 import com.GameInterface.SpellBase;
@@ -20,7 +20,7 @@ import mx.utils.Delegate;
  * 
  * Author: Boorish
  */
-class com.boocommon.MountHelper
+class com.boobarcommon.MountHelper
 {
 	private static var m_interval:IntervalCounter = null;
 	

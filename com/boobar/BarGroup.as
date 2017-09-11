@@ -1,7 +1,7 @@
 import com.Utils.StringUtils;
 import com.Utils.Archive;
 import com.boobar.BarGroup;
-import com.boocommon.Colours;
+import com.boobarcommon.Colours;
 /**
  * There is no copyright on this code
  *

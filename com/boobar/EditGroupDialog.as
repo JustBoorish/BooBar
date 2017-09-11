@@ -1,9 +1,9 @@
 import com.Utils.Text;
-import com.boocommon.Checkbox;
-import com.boocommon.Colours;
-import com.boocommon.Graphics;
-import com.boocommon.MenuPanel;
-import com.boocommon.ModalBase;
+import com.boobarcommon.Checkbox;
+import com.boobarcommon.Colours;
+import com.boobarcommon.Graphics;
+import com.boobarcommon.MenuPanel;
+import com.boobarcommon.ModalBase;
 import mx.utils.Delegate;
 /**
  * There is no copyright on this code
@@ -35,13 +35,13 @@ class com.boobar.EditGroupDialog
 	private var m_colourY:Number;
 	private var m_flashCheck:Checkbox;
 	
-	public function EditGroupDialog(name:String, parent:MovieClip, groupName:String, colourName:String, screenFlash:Boolean) 
+	public function EditGroupDialog(name:String, parent:MovieClip, parentWidth:Number, parentHeight:Number, groupName:String, colourName:String, screenFlash:Boolean) 
 	{
 		m_groupName = groupName;
 		m_colourName = colourName;
 		m_screenFlash = screenFlash;
 		
-		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), 0.95);
+		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), parentWidth * 0.7, parentHeight * 0.95);
 		var modalMC:MovieClip = m_modalBase.GetMovieClip();
 		var x:Number = modalMC._width / 4;
 		var y:Number = modalMC._height - 10;

@@ -1,5 +1,5 @@
-import com.boocommon.DebugWindow;
-import com.boocommon.IntervalCounter;
+import com.boobarcommon.DebugWindow;
+import com.boobarcommon.IntervalCounter;
 import com.Utils.Signal;
 import mx.utils.Delegate;
 /**
@@ -18,7 +18,7 @@ import mx.utils.Delegate;
  * 
  * Author: Boorish
  */
-class com.boocommon.InventoryThrottle
+class com.boobarcommon.InventoryThrottle
 {
 	private static var MUST_WAIT_ENG:String = "You must wait a little while before you can perform that action again";
 	private static var MUST_WAIT_FR:String = "Vous devez attendre un peu avant d'entreprendre à nouveau cette action";

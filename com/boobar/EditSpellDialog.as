@@ -1,9 +1,9 @@
 import com.Utils.StringUtils;
 import com.Utils.Text;
-import com.boocommon.Checkbox;
-import com.boocommon.Colours;
-import com.boocommon.Graphics;
-import com.boocommon.ModalBase;
+import com.boobarcommon.Checkbox;
+import com.boobarcommon.Colours;
+import com.boobarcommon.Graphics;
+import com.boobarcommon.ModalBase;
 import mx.utils.Delegate;
 /**
  * There is no copyright on this code
@@ -33,12 +33,12 @@ class com.boobar.EditSpellDialog
 	private var m_npcLabel:TextField;
 	private var m_npcInput:TextField;
 	
-	public function EditSpellDialog(name:String, parent:MovieClip, spellName:String, npcName:String) 
+	public function EditSpellDialog(name:String, parent:MovieClip, parentWidth:Number, parentHeight:Number, spellName:String, npcName:String) 
 	{
 		m_spellName = spellName;
 		m_npcName = npcName;
 		
-		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), 0.75);
+		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), parentWidth * 0.75, parentHeight * 0.7);
 		var modalMC:MovieClip = m_modalBase.GetMovieClip();
 		var x:Number = modalMC._width / 4;
 		var y:Number = modalMC._height - 10;

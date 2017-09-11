@@ -14,7 +14,7 @@
  * 
  * Author: Boorish
  */
-class com.boocommon.Colours
+class com.boobarcommon.Colours
 {
 	public static var RED:String = "Red";
 	public static var BLUE:String = "Blue";

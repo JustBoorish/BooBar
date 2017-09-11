@@ -1,4 +1,4 @@
-import com.boocommon.Graphics;
+import com.boobarcommon.Graphics;
 import caurina.transitions.Tweener;
 import flash.geom.Matrix;
 /**
@@ -17,7 +17,7 @@ import flash.geom.Matrix;
  * 
  * Author: Boorish
  */
-class com.boocommon.ScreenFlash
+class com.boobarcommon.ScreenFlash
 {
 	private var m_name:String;
 	private var m_parent:MovieClip;

@@ -9,9 +9,9 @@ import com.boobar.Castbar;
 import com.boobar.OptionsTab;
 import com.boobar.SpellList;
 import com.boobar.Target;
-import com.boocommon.Colours;
-import com.boocommon.DebugWindow;
-import com.boocommon.TabWindow;
+import com.boobarcommon.Colours;
+import com.boobarcommon.DebugWindow;
+import com.boobarcommon.TabWindow;
 import com.boobar.BarGroup;
 import com.boobar.BIcon;
 import com.boobar.Controller;
@@ -37,7 +37,7 @@ import mx.utils.Delegate;
  */
 class com.boobar.Controller extends MovieClip
 {
-	private static var VERSION:String = "0.6";
+	private static var VERSION:String = "0.7";
 	private static var SETTINGS_PREFIX:String = "BOOBAR";
 	private static var MAX_GROUPS:Number = 75;
 	private static var MAX_SPELLS:Number = 250;

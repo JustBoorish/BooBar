@@ -1,6 +1,6 @@
-import com.boocommon.DebugWindow;
-import com.boocommon.Graphics;
-import com.boocommon.ScrollPane;
+import com.boobarcommon.DebugWindow;
+import com.boobarcommon.Graphics;
+import com.boobarcommon.ScrollPane;
 import com.Utils.Text;
 import caurina.transitions.Tweener;
 import org.sitedaniel.utils.Proxy;
@@ -21,7 +21,7 @@ import mx.utils.Delegate;
  * 
  * Author: Boorish
  */
-class com.boocommon.ComboBox
+class com.boobarcommon.ComboBox
 {
 	private var m_parent:MovieClip;
 	private var m_combo:MovieClip;
@@ -121,7 +121,7 @@ class com.boocommon.ComboBox
 			DrawComboEntry(indx);
 		}
 		
-		m_scroll = new ScrollPane(m_combo, "Scroll_" + m_name, m_button._x, m_button._y + m_button._height, m_button._width, m_elementHeight * m_entryHeight, 0x262626);
+		m_scroll = new ScrollPane(m_combo, "Scroll_" + m_name, m_button._x, m_button._y + m_button._height, m_button._width, m_elementHeight * m_entryHeight, 0x262626, m_elementHeight * m_entryHeight * 0.04);
 		m_scroll.SetContent(m_list, m_list._height);
 	}
 	

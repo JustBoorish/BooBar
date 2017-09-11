@@ -1,9 +1,9 @@
 import com.Utils.Text;
 import com.boobar.BarGroup;
-import com.boocommon.Colours;
-import com.boocommon.ComboBox;
-import com.boocommon.Graphics;
-import com.boocommon.ModalBase;
+import com.boobarcommon.Colours;
+import com.boobarcommon.ComboBox;
+import com.boobarcommon.Graphics;
+import com.boobarcommon.ModalBase;
 import mx.utils.Delegate;
 /**
  * There is no copyright on this code
@@ -31,12 +31,12 @@ class com.boobar.ChangeGroupDialog
 	private var m_callback:Function;
 	private var m_combo:ComboBox;
 	
-	public function ChangeGroupDialog(name:String, parent:MovieClip, addonMC:MovieClip, groupName:String, groups:Array) 
+	public function ChangeGroupDialog(name:String, parent:MovieClip, addonMC:MovieClip, parentWidth:Number, parentHeight:Number, groupName:String, groups:Array) 
 	{
 		m_groupName = groupName;
 		m_groups = groups;
 		m_addonMC = addonMC;
-		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), 0.5, 0.75);
+		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), parentWidth * 0.75, parentHeight * 0.6);
 		var modalMC:MovieClip = m_modalBase.GetMovieClip();
 		var x:Number = modalMC._width / 4;
 		var y:Number = modalMC._height - 10;

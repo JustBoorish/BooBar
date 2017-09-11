@@ -4,15 +4,15 @@ import com.boobar.ChangeGroupDialog;
 import com.boobar.EditGroupDialog;
 import com.boobar.EditSpellDialog;
 import com.boobar.KnownSpell;
-import com.boocommon.Colours;
-import com.boocommon.DebugWindow;
-import com.boocommon.ITabPane;
-import com.boocommon.InfoWindow;
-import com.boocommon.OKDialog;
-import com.boocommon.PopupMenu;
-import com.boocommon.ScrollPane;
-import com.boocommon.TreePanel;
-import com.boocommon.YesNoDialog;
+import com.boobarcommon.Colours;
+import com.boobarcommon.DebugWindow;
+import com.boobarcommon.ITabPane;
+import com.boobarcommon.InfoWindow;
+import com.boobarcommon.OKDialog;
+import com.boobarcommon.PopupMenu;
+import com.boobarcommon.ScrollPane;
+import com.boobarcommon.TreePanel;
+import com.boobarcommon.YesNoDialog;
 import mx.utils.Delegate;
 /**
  * There is no copyright on this code
@@ -53,6 +53,8 @@ class com.boobar.SpellList implements ITabPane
 	private var m_yesNoDialog:YesNoDialog;
 	private var m_okDialog:OKDialog;
 	private var m_forceRedraw:Boolean;
+	private var m_parentWidth:Number;
+	private var m_parentHeight:Number;
 	
 	public function SpellList(name:String, groups:Array, spells:Object, settings:Object)
 	{
@@ -68,7 +70,9 @@ class com.boobar.SpellList implements ITabPane
 		m_parent = parent;
 		m_name = name;
 		m_addonMC = addonMC;
-		m_scrollPane = new ScrollPane(m_parent, m_name + "Scroll", x, y, width, height, null);
+		m_parentWidth = parent._width;
+		m_parentHeight = parent._height;
+		m_scrollPane = new ScrollPane(m_parent, m_name + "Scroll", x, y, width, height, null, m_parentHeight * 0.1);
 		
 		m_itemPopup = new PopupMenu(m_addonMC, "ItemPopup", 6);
 		m_itemPopup.AddItem("Edit", Delegate.create(this, EditSpell));
@@ -297,7 +301,7 @@ class com.boobar.SpellList implements ITabPane
 		{
 			UnloadDialogs();
 			
-			m_editSpellDialog = new EditSpellDialog("AddSpell", m_parent, "", "");
+			m_editSpellDialog = new EditSpellDialog("AddSpell", m_parent, m_parentWidth, m_parentHeight, "", "");
 			m_editSpellDialog.Show(Delegate.create(this, AddSpellCB));
 		}
 	}
@@ -335,7 +339,7 @@ class com.boobar.SpellList implements ITabPane
 		{
 			UnloadDialogs();
 			
-			m_editSpellDialog = new EditSpellDialog("EditSpell", m_parent, m_currentSpell.GetName(), m_currentSpell.GetNPCName());
+			m_editSpellDialog = new EditSpellDialog("EditSpell", m_parent, m_parentWidth, m_parentHeight, m_currentSpell.GetName(), m_currentSpell.GetNPCName());
 			m_editSpellDialog.Show(Delegate.create(this, EditSpellCB));
 		}
 	}
@@ -390,7 +394,7 @@ class com.boobar.SpellList implements ITabPane
 			{
 				UnloadDialogs();
 				
-				m_changeGroupDialog = new ChangeGroupDialog("ChangeGroup", m_parent, m_addonMC, m_currentGroup.GetName(), m_groups);
+				m_changeGroupDialog = new ChangeGroupDialog("ChangeGroup", m_parent, m_addonMC, m_parentWidth, m_parentHeight, m_currentGroup.GetName(), m_groups);
 				m_changeGroupDialog.Show(Delegate.create(this, ChangeGroupCB));
 			}
 		}
@@ -459,13 +463,13 @@ class com.boobar.SpellList implements ITabPane
 				}
 				else
 				{
-					m_okDialog = new OKDialog("DeleteGroup", m_parent, "You cannot delete a", "group with entries", "");
+					m_okDialog = new OKDialog("DeleteGroup", m_parent, m_parentWidth, m_parentHeight, "You cannot delete a", "group with entries", "");
 					m_okDialog.Show();
 				}
 			}
 			else
 			{
-				m_okDialog = new OKDialog("DeleteGroup", m_parent, "You cannot delete the", "final group", "");
+				m_okDialog = new OKDialog("DeleteGroup", m_parent, m_parentWidth, m_parentHeight, "You cannot delete the", "final group", "");
 				m_okDialog.Show();
 			}
 		}
@@ -493,7 +497,7 @@ class com.boobar.SpellList implements ITabPane
 		if (m_currentGroup != null)
 		{
 			UnloadDialogs();
-			m_editGroupDialog = new EditGroupDialog("EditGroup", m_parent, m_currentGroup.GetName(), m_currentGroup.GetColourName(), m_currentGroup.GetScreenFlash());
+			m_editGroupDialog = new EditGroupDialog("EditGroup", m_parent, m_parentWidth, m_parentHeight, m_currentGroup.GetName(), m_currentGroup.GetColourName(), m_currentGroup.GetScreenFlash());
 			m_editGroupDialog.Show(Delegate.create(this, EditGroupCB));
 		}
 	}
@@ -539,7 +543,7 @@ class com.boobar.SpellList implements ITabPane
 		if (m_currentGroup != null)
 		{
 			UnloadDialogs();
-			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, "", Colours.GREY, false);
+			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, m_parentWidth, m_parentHeight, "", Colours.GetDefaultColourName(), false);
 			m_editGroupDialog.Show(Delegate.create(this, AddGroupAboveCB));
 		}
 	}
@@ -586,7 +590,7 @@ class com.boobar.SpellList implements ITabPane
 		if (m_currentGroup != null)
 		{
 			UnloadDialogs();
-			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, "", Colours.GREY, false);
+			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, m_parentWidth, m_parentHeight, "", Colours.GetDefaultColourName(), false);
 			m_editGroupDialog.Show(Delegate.create(this, AddGroupBelowCB));
 		}
 	}
