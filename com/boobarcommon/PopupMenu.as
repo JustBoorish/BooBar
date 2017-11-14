@@ -3,11 +3,12 @@ import com.boobarcommon.DebugWindow;
 import com.boobarcommon.Graphics;
 import com.boobarcommon.TreeCheck;
 import com.boobarcommon.PopupMenu;
+import com.boobarcommon.Proxy;
 import com.GameInterface.Tooltip.TooltipData;
 import com.GameInterface.Tooltip.TooltipInterface;
 import com.GameInterface.Tooltip.TooltipManager;
 import com.Utils.Text;
-import org.sitedaniel.utils.Proxy;
+import mx.utils.Delegate;
 /**
  * There is no copyright on this code
  *
@@ -208,8 +209,8 @@ class com.boobarcommon.PopupMenu
 			var labelExtents:Object = Text.GetTextExtent(m_names[indx], m_textFormat, m_menu);
 			var menuText:TextField = Graphics.DrawText(m_names[indx] + "MenuText", m_menu, m_names[indx], m_textFormat, m_margin, y + Math.round(m_elementHeight / 2 - labelExtents.height / 2), labelExtents.width, labelExtents.height);
 
-			menuCell.onRollOver = Proxy.create(this, function() { menuCell._alpha = 0; Tweener.addTween(menuCell, { _alpha:100, time:0.2, transition:"linear" } ); } );
-			menuCell.onRollOut = Proxy.create(this, function() { Tweener.removeTweens(menuCell); menuCell._alpha = 0; } );
+			menuCell.onRollOver = Delegate.create(this, function() { menuCell._alpha = 0; Tweener.addTween(menuCell, { _alpha:100, time:0.2, transition:"linear" } ); } );
+			menuCell.onRollOut = Delegate.create(this, function() { Tweener.removeTweens(menuCell); menuCell._alpha = 0; } );
 			menuCell.onPress = Proxy.create(this, function(i:Number) { Tweener.removeTweens(menuCell); menuCell._alpha = 0; this.CellPressed(i); }, indx);
 		}
 		

@@ -1,11 +1,11 @@
 import com.boobarcommon.DebugWindow;
 import com.boobarcommon.Graphics;
+import com.boobarcommon.Proxy;
 import caurina.transitions.Tweener;
 import com.Utils.Colors;
 import com.Utils.ID32;
 import com.Utils.Text;
 import mx.utils.Delegate;
-import org.sitedaniel.utils.Proxy;
 
 /**
  * There is no copyright on this code
@@ -35,14 +35,12 @@ class com.boobarcommon.ModalBase
 	private var m_input:TextField;
 	private var m_drawFrameCallback:Function;
 	
-	public function ModalBase(name:String, parent:MovieClip, drawFrameCallback:Function, frameWidth:Number, frameHeight:Number) 
+	public function ModalBase(name:String, parent:MovieClip, drawFrameCallback:Function, parentWidth:Number, parentHeight:Number, frameWidth:Number, frameHeight:Number) 
 	{
 		m_drawFrameCallback = drawFrameCallback;
 		
-		var width:Number = parent._width;
-		var height:Number = parent._height;
-		m_blocker = parent.createEmptyMovieClip("modalBlocker", parent.getNextHighestDepth());
-		Graphics.DrawFilledRoundedRectangle(m_blocker, 0x000000, 0, 0x000000, 60, 0, 0, width, height);
+		m_blocker = parent.createEmptyMovieClip("modalBlocker" + name, parent.getNextHighestDepth());
+		Graphics.DrawFilledRoundedRectangle(m_blocker, 0x000000, 0, 0x000000, 60, 0, 0, parentWidth, parentHeight);
 
 		// Trap Mouse Events
 		m_blocker.onPress = Delegate.create(this, NullEvent);
@@ -91,8 +89,8 @@ class com.boobarcommon.ModalBase
 
 		DrawFrame();
 		
-		m_modal._x = width / 2 - m_modal._width / 2;
-		m_modal._y = height / 2 - m_modal._height / 2;
+		m_modal._x = parentWidth / 2 - m_modal._width / 2;
+		m_modal._y = parentHeight / 2 - m_modal._height / 2;
 		m_modal._visible = false;
 	}
 	

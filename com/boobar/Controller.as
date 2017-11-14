@@ -18,7 +18,7 @@ import com.boobar.Controller;
 import com.boobar.KnownSpell;
 import com.boobar.Settings;
 import mx.utils.Delegate;
-
+import com.boobarcommon.Proxy;
 /**
  * There is no copyright on this code
  *
@@ -37,10 +37,11 @@ import mx.utils.Delegate;
  */
 class com.boobar.Controller extends MovieClip
 {
-	private static var VERSION:String = "0.7";
+	private static var VERSION:String = "1.1";
 	private static var SETTINGS_PREFIX:String = "BOOBAR";
 	private static var MAX_GROUPS:Number = 75;
 	private static var MAX_SPELLS:Number = 250;
+	private static var MAX_TARGETS:Number = 3;
 
 	private static var m_instance:Controller = null;
 	
@@ -51,13 +52,14 @@ class com.boobar.Controller extends MovieClip
 	private var m_settings:Object;
 	private var m_clientCharacter:Character;
 	private var m_characterName:String;
-	private var m_target:Target;
-	private var m_castbar:Castbar;
+	private var m_targets:Array;
+	private var m_castbars:Array;
 	private var m_groups:Array;
 	private var m_spells:Object;
 	private var m_configWindow:TabWindow;
 	private var m_optionsTab:OptionsTab;
 	private var m_spellTab:SpellList;
+	private var m_specialMobs:Object;
 	
 	//On Load
 	function onLoad():Void
@@ -73,11 +75,7 @@ class com.boobar.Controller extends MovieClip
 		{
 			if (m_clientCharacter != null && (m_clientCharacter.GetName() == "Boorish" || m_clientCharacter.GetName() == "Boor" || m_clientCharacter.GetName() == "BoorGirl"))
 			{
-				m_debug = new DebugWindow(m_mc, DebugWindow.Debug);
-			}
-			else
-			{
-				m_debug = new DebugWindow(m_mc, DebugWindow.Info);
+				m_debug = DebugWindow.GetInstance(m_mc, DebugWindow.Debug, "BooBarDebug");
 			}
 		}
 		DebugWindow.Log(DebugWindow.Info, "BooBar Loaded");
@@ -88,13 +86,21 @@ class com.boobar.Controller extends MovieClip
 		m_mc._x = 0;
 		m_mc._y = 0;
 		m_characterName = null;
+		m_targets = new Array();
+		m_castbars = new Array();
+		for (var indx:Number = 0; indx < MAX_TARGETS; ++indx)
+		{
+			m_targets.push(null);
+			m_castbars.push(null);
+		}
+		
 		SetDefaults();
 	}
 	
 	function OnModuleActivated(config:Archive):Void
 	{
 		Settings.SetArchive(config);
-		DebugWindow.Log("BooBar OnModuleActivated: " + config.toString());
+		DebugWindow.Log("BooBar OnModuleActivated "); // + config.toString());
 		
 		if (Character.GetClientCharacter().GetName() != m_characterName)
 		{
@@ -115,23 +121,18 @@ class com.boobar.Controller extends MovieClip
 			LoadKnownSpells();
 			SetDefaultSpells();
 			
-			if (m_castbar != null)
-			{
-				m_castbar.Unload();
-			}
-			
-			RecreateCastbar();
+			RecreateCastbars();
 			
 			m_icon = new BIcon(m_mc, _root["boobar\\boobar"].BooBarIcon, VERSION, Delegate.create(this, ToggleConfigVisible), null, null, Delegate.create(this, ToggleDebugVisible), m_settings[BIcon.ICON_X], m_settings[BIcon.ICON_Y]);
 		}
 		
-		m_castbar.SetVisible(false);
+		HideCastbars();
 	}
 	
 	function OnModuleDeactivated():Archive
 	{		
 		SaveSettings();
-		ClearTarget();
+		ClearTargets();
 
 		var ret:Archive = Settings.GetArchive();
 		//DebugWindow.Log("BooBar OnModuleDeactivated: " + ret.toString());
@@ -156,7 +157,7 @@ class com.boobar.Controller extends MovieClip
 			AddKnownSpell("Rot Iron", "", specialInterruptGroup.GetID());
 			AddKnownSpell("Painwheel Overdrive", "", specialInterruptGroup.GetID());
 			AddKnownSpell("Demolish", "", specialInterruptGroup.GetID());
-			AddKnownSpell("Chirugy", "Cassius", specialInterruptGroup.GetID());
+			AddKnownSpell("Chirurgy", "Cassius, Hadean Guard", specialInterruptGroup.GetID());
 			AddKnownSpell("Concuss", "", specialInterruptGroup.GetID());
 			
 			var specialPurgeGroup:BarGroup = new BarGroup(BarGroup.GetNextID(m_groups), "Special Purges", Colours.PURPLE, true);
@@ -188,10 +189,23 @@ class com.boobar.Controller extends MovieClip
 		m_defaults[Settings.Y] = 600;
 		m_defaults[BIcon.ICON_X] = -1;
 		m_defaults[BIcon.ICON_Y] = -1;
-		Settings.SetBarX(m_defaults, Stage.width / 2 - 150);
-		Settings.SetBarY(m_defaults, Stage.height / 5 * 3);
-		Settings.SetBarWidth(m_defaults, 300);
-		Settings.SetBarFontSize(m_defaults, 14);
+		
+		for (var indx:Number = 0; indx < MAX_TARGETS; ++indx)
+		{
+			if (indx == 0)
+			{
+				Settings.SetBarX(m_defaults, indx, Stage.width / 2 - 150);
+				Settings.SetBarY(m_defaults, indx, Stage.height / 5 * 3);
+			}
+			else
+			{
+				Settings.SetBarX(m_defaults, indx, Stage.width / 4 * 3);
+				Settings.SetBarY(m_defaults, indx, Stage.height / 5 + (indx * 30));
+			}
+			
+			Settings.SetBarWidth(m_defaults, indx, 300);
+			Settings.SetBarFontSize(m_defaults, indx, 14);
+		}
 	}
 	
 	private function SaveSettings():Void
@@ -280,28 +294,53 @@ class com.boobar.Controller extends MovieClip
 		}
 	}
 	
-	private function RecreateCastbar():Void
+	private function RecreateCastbars():Void
 	{
-		if (m_castbar != null)
+		for (var indx:Number = 0; indx < m_castbars.length; ++indx)
 		{
-			m_castbar.Unload();
+			if (m_castbars[indx] != null)
+			{
+				m_castbars[indx].Unload();
+			}
+			
+			var showNpcName:Boolean = true;
+			if (indx == 0)
+			{
+				showNpcName = false;
+			}
+			
+			m_castbars[indx] = new Castbar("Castbar" + indx, m_mc, Settings.GetBarX(m_settings, indx), Settings.GetBarY(m_settings, indx), Settings.GetBarWidth(m_settings, indx), Settings.GetBarFontSize(m_settings, indx), showNpcName, m_groups, m_spells);
 		}
-		
-		m_castbar = new Castbar("", m_mc, Settings.GetBarX(m_settings), Settings.GetBarY(m_settings), Settings.GetBarWidth(m_settings), Settings.GetBarFontSize(m_settings), m_groups, m_spells);
 	}
 	
-	private function ClearTarget():Void
+	private function HideCastbars():Void
 	{
-		if (m_target != null)
+		for (var indx:Number = 0; indx < m_castbars.length; ++indx)
 		{
-			m_target.Unload();
-			m_target = null;
+			if (m_castbars[indx] != null)
+			{
+				m_castbars[indx].SetVisible(false);
+			}
+		}
+	}
+	
+	private function ClearTargets():Void
+	{
+		for (var indx:Number = 0; indx < m_targets.length; ++indx)
+		{
+			ClearTarget(indx);
+		}
+	}
+	
+	private function ClearTarget(indx:Number):Void
+	{
+		if (m_targets[indx] != null)
+		{
+			m_targets[indx].Unload();
+			m_targets[indx] = null;
 		}
 		
-		if (m_castbar != null)
-		{
-			m_castbar.SetVisible(false);
-		}				
+		HideCastbar(indx);
 	}
 	
 	private function ToggleConfigVisible():Void
@@ -334,14 +373,14 @@ class com.boobar.Controller extends MovieClip
 	private function ConfigClosed():Void
 	{
 		SaveSettings();
-		RecreateCastbar();
+		RecreateCastbars();
 	}	
 	
 	private function PlayerDied():Void
 	{
 		if (m_clientCharacter != null)
 		{
-			ClearTarget();
+			ClearTargets();
 		}
 	}
 	
@@ -349,25 +388,110 @@ class com.boobar.Controller extends MovieClip
 	{
 		if (characterID != null)
 		{
-			var character:Character = Character.GetCharacter(characterID);
-			if (character != null)
+			if (m_targets[0] == null || !m_targets[0].ID32Matches(characterID))
 			{
-				ClearTarget();
-				
-				m_target = new Target(character, Delegate.create(this, CastbarUpdate));
+				var character:Character = Character.GetCharacter(characterID);
+				if (character != null)
+				{
+					DemoteTarget(characterID);
+					
+					ClearTarget(0);
+					m_targets[0] = new Target(character, Proxy.createThreeArgs(this, CastbarUpdate, 0));
+				}
 			}
 		}
 	}
 	
-	private function CastbarUpdate(currentSpell:String, canInterrupt:Boolean, pct:Number):Void
+	private function CastbarUpdate(currentSpell:String, canInterrupt:Boolean, pct:Number, targetNumber:Number):Void
 	{
-		if (m_target == null)
+		if (m_targets[targetNumber] == null)
 		{
-			m_castbar.Update(currentSpell, "", canInterrupt, pct);
+			if (m_castbars[targetNumber] != null)
+			{
+				m_castbars[targetNumber].Update(currentSpell, "", canInterrupt, pct);
+			}
 		}
 		else
 		{
-			m_castbar.Update(currentSpell, m_target.GetName(), canInterrupt, pct);
+			if (m_castbars[targetNumber] != null)
+			{
+				m_castbars[targetNumber].Update(currentSpell, m_targets[targetNumber].GetName(), canInterrupt, pct);
+			}
 		}
+	}
+	
+	private function HideCastbar(indx:Number):Void
+	{
+		if (m_castbars[indx] != null)
+		{
+			m_castbars[indx].SetVisible(false);
+		}				
+	}
+	
+	private function IsSpecialMob(target:Target):Boolean
+	{
+		return false;
+		
+		/*
+		if (m_specialMobs == null)
+		{
+			m_specialMobs = new Object();
+			m_specialMobs["Orochi Dead Ops"] = 1;
+			m_specialMobs["The Ur-Draug"] = 1;
+			m_specialMobs["Brutus, Hadean Guard"] = 1;
+			m_specialMobs["Cassius, Hadean Guard"] = 1;
+			m_specialMobs["The Iscariot, Hadean Guard"] = 1;
+			m_specialMobs["Prime Maker"] = 1;
+		}
+		
+		var ret:Boolean = false;
+		if (target.GetName() != null)
+		{
+			if (m_specialMobs[target.GetName()] == 1)
+			{
+				DebugWindow.Log(DebugWindow.Debug, "Special mob " + target.GetName());
+				ret = true;
+			}
+		}
+		
+		return ret;
+		*/
+	}
+	
+	private function DemoteTarget(characterID:ID32):Void
+	{
+		var newTargets:Array = new Array();
+		for (var indx:Number = 0; indx < m_targets.length; ++indx)
+		{
+			newTargets.push(null);
+			
+			if (m_targets[indx] != null && m_targets[indx].ID32Matches(characterID))
+			{
+				ClearTarget(indx);
+			}
+		}
+		
+		for (var indx:Number = 0; indx < m_targets.length - 1; ++indx)
+		{
+			if (m_targets[indx] != null)
+			{
+				if (IsSpecialMob(m_targets[indx]))
+				{
+					newTargets[indx + 1] = m_targets[indx];
+					newTargets[indx + 1].SetUpdateFunction(Proxy.createThreeArgs(this, CastbarUpdate, indx + 1));
+				}
+				else
+				{
+					ClearTarget(indx);
+				}
+			}
+		}
+		
+		if (m_targets[m_targets.length - 1] != null)
+		{
+			ClearTarget(m_targets.length - 1);
+		}
+		
+		m_targets = newTargets;
 	}
 }

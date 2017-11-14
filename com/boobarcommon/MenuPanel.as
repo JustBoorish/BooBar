@@ -2,11 +2,12 @@ import caurina.transitions.Tweener;
 import com.boobarcommon.Graphics;
 import com.boobarcommon.MenuPanel;
 import com.boobarcommon.DebugWindow;
+import com.boobarcommon.Proxy;
 import com.GameInterface.Tooltip.TooltipData;
 import com.GameInterface.Tooltip.TooltipInterface;
 import com.GameInterface.Tooltip.TooltipManager;
 import com.Utils.Text;
-import org.sitedaniel.utils.Proxy;
+import mx.utils.Delegate;
 /**
  * There is no copyright on this code
  *
@@ -459,8 +460,8 @@ class com.boobarcommon.MenuPanel
 			menuButton.endFill();
 		}
 		
-		menuCell.onRollOver = Proxy.create(this, function() { menuHover._alpha = 0; Tweener.addTween(menuHover, { _alpha:40, time:0.5, transition:"linear" } ); this.ShowTooltip(indx); } );
-		menuCell.onRollOut = Proxy.create(this, function() { Tweener.removeTweens(menuHover); menuHover._alpha = 0; this.CloseTooltip(); } );
+		menuCell.onRollOver = Delegate.create(this, function() { menuHover._alpha = 0; Tweener.addTween(menuHover, { _alpha:40, time:0.5, transition:"linear" } ); this.ShowTooltip(indx); } );
+		menuCell.onRollOut = Delegate.create(this, function() { Tweener.removeTweens(menuHover); menuHover._alpha = 0; this.CloseTooltip(); } );
 		menuCell.onPress = Proxy.create(this, function(i:Number) { Tweener.removeTweens(menuHover); menuHover._alpha = 0; this.CellPressed(i); }, indx);
 
 		m_cells.push(menuCell);

@@ -1,4 +1,6 @@
+import com.boobarcommon.DebugWindow;
 import com.GameInterface.Game.Character;
+import com.Utils.ID32;
 import mx.utils.Delegate;
 /**
  * There is no copyright on this code
@@ -24,6 +26,8 @@ class com.boobar.Target
 	private var m_currentSpell:String;
 	private var m_canInterrupt:Boolean;
 	private var m_name:String;
+	private var m_lastPct:Number;
+	private var m_intervalCount:Number;
 	
 	public function Target(character:Character, updateFunction:Function) 
 	{
@@ -46,6 +50,7 @@ class com.boobar.Target
 		ClearInterval();
 		if (m_character != null)
 		{
+			if (GetName() == "Primordial Dweller")	DebugWindow.Log(DebugWindow.Debug, "Unload " + m_character.GetName());
 			m_character.SignalCommandStarted.Disconnect(SlotSignalCommandStarted, this);
 			m_character.SignalCommandEnded.Disconnect(SlotSignalCommandEnded, this);
 			m_character.SignalCommandAborted.Disconnect(SlotSignalCommandEnded, this);
@@ -64,6 +69,16 @@ class com.boobar.Target
 		return m_name;
 	}
 	
+	public function ID32Matches(id:ID32):Boolean
+	{
+		return m_character.GetID().Equal(id);
+	}
+	
+	public function SetUpdateFunction(updateFunction:Function):Void
+	{
+		m_updateFunction = updateFunction;
+	}
+	
 	private function ClearInterval():Void
 	{
 		if (m_intervalID != -1)
@@ -76,6 +91,8 @@ class com.boobar.Target
 	private function StartInterval():Void
 	{
 		ClearInterval();
+		m_lastPct = 0;
+		m_intervalCount = 0;
 		m_intervalID = setInterval(Delegate.create(this, UpdateProgress), 20);
 	}
 
@@ -89,6 +106,21 @@ class com.boobar.Target
 		else
 		{
 			CallUpdate(pct);
+			
+			if (pct <= m_lastPct)
+			{
+				++m_intervalCount;
+				if (m_intervalCount > 25)
+				{
+					SlotSignalCommandEnded();
+				}
+			}
+			else
+			{
+				m_intervalCount = 0;
+			}
+			
+			m_lastPct = pct;
 		}
 	}
 	
@@ -99,6 +131,8 @@ class com.boobar.Target
 		{
 			m_currentSpell = "";
 		}
+		
+		if (GetName() == "Primordial Dweller")	DebugWindow.Log(DebugWindow.Debug, "Started " + m_currentSpell);
 		
 		m_canInterrupt = !uninterruptable;
 		if (m_character.GetStat(_global.Enums.Stat.e_Uninterruptable, 2) > 0)

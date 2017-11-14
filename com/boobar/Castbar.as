@@ -32,28 +32,42 @@ class com.boobar.Castbar
 	private var m_frame:MovieClip;
 	private var m_groups:Array;
 	private var m_spells:Object;
+	private var m_showNpcName:Boolean;
 	private var m_scaleFrame:MovieClip;
 	private var m_dragBar:MovieClip;
 	private var m_bars:Array;
 	private var m_flashes:Array;
-	private var m_textField:TextField;
-	private var m_lastName:String;
+	private var m_spellTextField:TextField;
+	private var m_npcTextField:TextField;
+	private var m_lastSpellName:String;
+	private var m_lastNpcName:String;
 	private var m_textFormat:TextFormat;
 	private var m_scaleWidth:Number;
 	private var m_dragging:Boolean;
 	private var m_spellLookup:Object;
+	private var m_hideCastbarID:Number;
 	
-	public function Castbar(name:String, parent:MovieClip, x:Number, y:Number, width:Number, inFontSize:Number, groups:Array, spells:Object)
+	public function Castbar(name:String, parent:MovieClip, x:Number, y:Number, width:Number, inFontSize:Number, showNpcName:Boolean, groups:Array, spells:Object)
 	{
+		var fontSize:Number = inFontSize;
+		if (fontSize == null || fontSize < 6)
+		{
+			fontSize = 14;
+			DebugWindow.Log(DebugWindow.Debug, "Fontsize = " + inFontSize);
+		}
+		
 		m_parent = parent;
 		m_groups = groups;
 		m_spells = spells;
+		m_hideCastbarID = -1;
+		m_showNpcName = showNpcName;
 		m_textFormat = Graphics.GetBoldTextFormat();
 		m_textFormat.size = inFontSize;
 		m_frame = m_parent.createEmptyMovieClip("CastBar" + name, m_parent.getNextHighestDepth());
 		
 		var extents:Object = Text.GetTextExtent("TEST", m_textFormat, m_frame);
 		var height:Number = extents.height + extents.height * 0.05 + 4;
+		DebugWindow.Log(DebugWindow.Debug, "Height = " + height + " " + inFontSize);
 		
 		m_scaleFrame = m_frame.createEmptyMovieClip("ScaleFrame", m_frame.getNextHighestDepth());
 		m_dragBar = CreateBar("DragBar", width, height, Colours.GetDefaultColourArray());
@@ -99,6 +113,9 @@ class com.boobar.Castbar
 		m_frame._visible = visible;
 		if (visible != true)
 		{
+			ClearHideCastbar();
+			RemoveNpcName();
+			
 			for (var indx:Number = 0; indx < m_flashes.length; ++indx)
 			{
 				var thisFlash:ScreenFlash = m_flashes[indx];
@@ -122,10 +139,17 @@ class com.boobar.Castbar
 		}
 	}
 	
+	public function GetVisible():Boolean
+	{
+		return m_frame._visible;
+	}
+	
 	public function Unload():Void
 	{
 		m_frame.removeMovieClip();
 		m_frame = null;
+		
+		RemoveNpcName();
 		
 		for (var indx:Number = 0; indx < m_flashes.length; ++indx)
 		{
@@ -139,6 +163,7 @@ class com.boobar.Castbar
 	
 	public function EnableDragging():Void
 	{
+		RemoveNpcName();
 		HideAllBars();
 		m_dragBar._visible = true;
 		SetVisible(true);
@@ -146,6 +171,7 @@ class com.boobar.Castbar
 	
 	public function DisableDragging():Void
 	{
+		RemoveNpcName();
 		HideAllBars();
 		SetVisible(false);
 		onDragRelease();
@@ -161,6 +187,7 @@ class com.boobar.Castbar
 	
 	public function CenterHorizontally():Void
 	{
+		RemoveNpcName();
 		if (m_frame != null)
 		{
 			m_frame._x = Stage.width / 2 - m_frame._width / 2;
@@ -169,6 +196,7 @@ class com.boobar.Castbar
 
 	public function Update(currentSpell:String, npc:String, canInterrupt:Boolean, pct:Number):Void
 	{
+		ClearHideCastbar();
 		if (pct == null || pct >= 1)
 		{
 			SetVisible(false);
@@ -184,19 +212,33 @@ class com.boobar.Castbar
 				thisBar._visible = true;
 			}
 			
-			if (m_lastName != currentSpell)
+			if (m_lastSpellName != currentSpell)
 			{
-				m_lastName = currentSpell;
-				if (m_textField != null)
+				m_lastSpellName = currentSpell;
+				if (m_spellTextField != null)
 				{
-					m_textField.removeTextField();
+					m_spellTextField.removeTextField();
 				}
 				
-				var extents:Object = Text.GetTextExtent(m_lastName, m_textFormat, m_frame);
-				m_textField = Graphics.DrawText("Label", m_frame, m_lastName, m_textFormat, m_frame._width / 2 - extents.width / 2, m_frame._height / 2 - extents.height / 2, extents.width, extents.height);
+				var extents:Object = Text.GetTextExtent(m_lastSpellName, m_textFormat, m_frame);
+				m_spellTextField = Graphics.DrawText("SpellLabel", m_frame, m_lastSpellName, m_textFormat, m_frame._width / 2 - extents.width / 2, m_frame._height / 2 - extents.height / 2, extents.width, extents.height);
+			}
+			
+			if (m_showNpcName == true && m_lastNpcName != npc)
+			{
+				RemoveNpcName();
+				
+				if (npc != "")
+				{
+					m_lastNpcName = npc;
+					var extents:Object = Text.GetTextExtent(m_lastNpcName, m_textFormat, m_parent);
+					m_npcTextField = Graphics.DrawText("NpcLabel", m_parent, m_lastNpcName, m_textFormat, m_frame._x - 10 - extents.width, m_frame._y + m_frame._height / 2 - extents.height / 2, extents.width, extents.height);
+				}
 			}
 			
 			m_scaleFrame._width = (m_scaleWidth * pct);
+			
+			m_hideCastbarID = setTimeout(Delegate.create(this, HideCastbar), 750);
 			
 			SetVisible(true);
 		}
@@ -308,5 +350,29 @@ class com.boobar.Castbar
 			m_frame.stopDrag();
 			m_dragging = false;
 		}
+	}
+	
+	private function RemoveNpcName():Void
+	{
+		m_lastNpcName = null;
+		if (m_npcTextField != null)
+		{
+			m_npcTextField.removeTextField();
+			m_npcTextField = null;
+		}
+	}
+	
+	private function ClearHideCastbar():Void
+	{
+		if (m_hideCastbarID != -1)
+		{
+			clearTimeout(m_hideCastbarID);
+			m_hideCastbarID = -1;
+		}
+	}
+	
+	private function HideCastbar():Void
+	{
+		SetVisible(false);
 	}
 }

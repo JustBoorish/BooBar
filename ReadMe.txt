@@ -18,6 +18,9 @@ Delete the BooBar directory from \Data\Gui\Customized\Flash\
 
 Change Log
 
+Version 1.1
+- Bug fix options tab to allow user to drag bar location
+
 Version 1.0
 Initial version allowing you to:
 - show a target castbar on the screen

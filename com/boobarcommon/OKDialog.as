@@ -31,7 +31,7 @@ class com.boobarcommon.OKDialog
 		m_line1 = line1;
 		m_line2 = line2;
 		m_line3 = line3;
-		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), frameWidth * 0.65, frameHeight * 0.3);
+		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), frameWidth, frameHeight, frameWidth * 0.65, frameHeight * 0.3);
 		
 		var modalMC:MovieClip = m_modalBase.GetMovieClip();
 		var x:Number = modalMC._width / 2;

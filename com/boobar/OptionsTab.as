@@ -74,6 +74,8 @@ class com.boobar.OptionsTab implements ITabPane
 		m_frame._visible = visible;
 		if (visible == true)
 		{
+			InitialiseSettings();
+			
 			m_showBar._visible = true;
 			m_hideBar._visible = false;
 		}
@@ -91,14 +93,14 @@ class com.boobar.OptionsTab implements ITabPane
 	{
 		if (m_settings != null)
 		{
-			Settings.SetBarFontSize(m_settings, Number(m_fontSizeCombo.GetSelectedEntry()));
-			Settings.SetBarWidth(m_settings, Number(m_barWidthInput.text));
+			Settings.SetBarFontSize(m_settings, 0, Number(m_fontSizeCombo.GetSelectedEntry()));
+			Settings.SetBarWidth(m_settings, 0, Number(m_barWidthInput.text));
 			
 			if (m_castbar != null)
 			{
 				var pt:Object = m_castbar.GetCoords();
-				Settings.SetBarX(m_settings, pt.x);
-				Settings.SetBarY(m_settings, pt.y);
+				Settings.SetBarX(m_settings, 0, pt.x);
+				Settings.SetBarY(m_settings, 0, pt.y);
 			}
 			
 			UnloadCastbar();
@@ -117,6 +119,12 @@ class com.boobar.OptionsTab implements ITabPane
 	{
 	}
 	
+	private function InitialiseSettings():Void
+	{
+		m_fontSizeCombo.SetSelectedEntry(String(Settings.GetBarFontSize(m_settings, 0)));
+		m_barWidthInput.text = String(Settings.GetBarWidth(m_settings, 0));
+	}
+	
 	private function DrawFrame(addonMC:MovieClip):Void
 	{
 		var textFormat:TextFormat = Graphics.GetTextFormat();
@@ -133,7 +141,7 @@ class com.boobar.OptionsTab implements ITabPane
 		var row:Number = 1;
 		var y:Number = (40 + 2 * extents.height) * row;
 		Graphics.DrawText("BarWidthLabel", m_frame, text, textFormat, 25, y, extents.width, extents.height);
-		text = String(Settings.GetBarWidth(m_settings));
+		text = String(Settings.GetBarWidth(m_settings, 0));
 		var sizeExtents:Object = Text.GetTextExtent("00000", textFormat, m_frame);
 		m_barWidthInput = Graphics.DrawText("BarWidthInput", m_frame, text, textFormat, 30 + extents.width, y, sizeExtents.width, sizeExtents.height);
 		m_barWidthInput.autoSize = false;
@@ -162,8 +170,10 @@ class com.boobar.OptionsTab implements ITabPane
 		y = 35 + (5 + 2 * extents.height) * row;
 		m_hideBar = Graphics.DrawButton("HideBar", m_frame, text, textFormat, 25, y, extents.width, Colours.GetColourArray(Colours.GREY), Delegate.create(this, HideBar));
 
-		m_fontSizeCombo = new ComboBox(m_frame, "FontSizeCombo", addonMC, comboX, comboY, null, null, 6, String(Settings.GetBarFontSize(m_settings)), sizes);
+		m_fontSizeCombo = new ComboBox(m_frame, "FontSizeCombo", addonMC, comboX, comboY, null, null, 6, String(Settings.GetBarFontSize(m_settings, 0)), sizes);
 		m_fontSizeCombo.SetChangedCallback(Delegate.create(this, FontSizeChanged));
+		
+		InitialiseSettings();
 	}
 	
 	private function MoveBar():Void
@@ -190,7 +200,7 @@ class com.boobar.OptionsTab implements ITabPane
 		var isDragging:Boolean = m_castbar != null;
 		Save();
 		UnloadCastbar();
-		Settings.SetBarX(m_settings, Stage.width / 2 - Settings.GetBarWidth(m_settings) / 2);
+		Settings.SetBarX(m_settings, 0, Stage.width / 2 - Settings.GetBarWidth(m_settings, 0) / 2);
 		if (isDragging == true)
 		{
 			CreateCastbar();
@@ -204,7 +214,7 @@ class com.boobar.OptionsTab implements ITabPane
 		m_hideBar._visible = true;
 		if (m_castbar == null)
 		{
-			m_castbar = new Castbar("Drag", m_addonMC, Settings.GetBarX(m_settings), Settings.GetBarY(m_settings), Settings.GetBarWidth(m_settings), Settings.GetBarFontSize(m_settings), null, null);
+			m_castbar = new Castbar("Drag", m_addonMC, Settings.GetBarX(m_settings, 0), Settings.GetBarY(m_settings, 0), Settings.GetBarWidth(m_settings, 0), Settings.GetBarFontSize(m_settings, 0), false, null, null);
 		}		
 	}
 	

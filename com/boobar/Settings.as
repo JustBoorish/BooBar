@@ -198,75 +198,75 @@ class com.boobar.Settings
 		return prefix + Separator + name;
 	}
 	
-	public static function GetBarX(settings:Object):Number
+	public static function GetBarX(settings:Object, barNumber:Number):Number
 	{
 		if (settings != null)
 		{
-			return settings[BAR_X];
+			return settings[BAR_X + barNumber];
 		}
 		
 		return null;
 	}
 	
-	public static function SetBarX(settings:Object, newX:Number):Void
+	public static function SetBarX(settings:Object, barNumber:Number, newX:Number):Void
 	{
-		if (settings != null && newX != null && newX >= 0)
+		if (settings != null && newX != null && !isNaN(newX) && newX >= 0)
 		{
-			settings[BAR_X] = newX;
+			settings[BAR_X + barNumber] = newX;
 		}
 	}
 	
-	public static function GetBarY(settings:Object):Number
+	public static function GetBarY(settings:Object, barNumber:Number):Number
 	{
 		if (settings != null)
 		{
-			return settings[BAR_Y];
+			return settings[BAR_Y + barNumber];
 		}
 		
 		return 4;
 	}
 	
-	public static function SetBarY(settings:Object, newY:Number):Void
+	public static function SetBarY(settings:Object, barNumber:Number, newY:Number):Void
 	{
-		if (settings != null && newY != null && newY >= 0)
+		if (settings != null && newY != null && !isNaN(newY) && newY >= 0)
 		{
-			settings[BAR_Y] = newY;
+			settings[BAR_Y + barNumber] = newY;
 		}
 	}
 	
-	public static function GetBarWidth(settings:Object):Number
+	public static function GetBarWidth(settings:Object, barNumber:Number):Number
 	{
 		if (settings != null)
 		{
-			return settings[BAR_WIDTH];
+			return settings[BAR_WIDTH + barNumber];
 		}
 		
 		return null;
 	}
 	
-	public static function SetBarWidth(settings:Object, newWidth:Number):Void
+	public static function SetBarWidth(settings:Object, barNumber:Number, newWidth:Number):Void
 	{
 		if (settings != null && newWidth != null && !isNaN(newWidth) && newWidth >= 50)
 		{
-			settings[BAR_WIDTH] = newWidth;
+			settings[BAR_WIDTH + barNumber] = newWidth;
 		}
 	}
 	
-	public static function GetBarFontSize(settings:Object):Number
+	public static function GetBarFontSize(settings:Object, barNumber:Number):Number
 	{
 		if (settings != null)
 		{
-			return settings[BAR_FONT_SIZE];
+			return settings[BAR_FONT_SIZE + barNumber];
 		}
 		
 		return null;
 	}
 	
-	public static function SetBarFontSize(settings:Object, newSize:Number):Void
+	public static function SetBarFontSize(settings:Object, barNumber:Number, newSize:Number):Void
 	{
-		if (settings != null && newSize != null && newSize >= 14)
+		if (settings != null && newSize != null && !isNaN(newSize) && newSize >= 14)
 		{
-			settings[BAR_FONT_SIZE] = newSize;
+			settings[BAR_FONT_SIZE + barNumber] = newSize;
 		}
 	}	
 }

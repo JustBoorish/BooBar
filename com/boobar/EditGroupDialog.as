@@ -41,7 +41,7 @@ class com.boobar.EditGroupDialog
 		m_colourName = colourName;
 		m_screenFlash = screenFlash;
 		
-		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), parentWidth * 0.7, parentHeight * 0.95);
+		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), parentWidth, parentHeight, parentWidth * 0.7, parentHeight * 0.95);
 		var modalMC:MovieClip = m_modalBase.GetMovieClip();
 		var x:Number = modalMC._width / 4;
 		var y:Number = modalMC._height - 10;

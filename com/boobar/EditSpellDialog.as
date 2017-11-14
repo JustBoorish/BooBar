@@ -38,7 +38,7 @@ class com.boobar.EditSpellDialog
 		m_spellName = spellName;
 		m_npcName = npcName;
 		
-		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), parentWidth * 0.75, parentHeight * 0.7);
+		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), parentWidth, parentHeight, parentWidth * 0.75, parentHeight * 0.7);
 		var modalMC:MovieClip = m_modalBase.GetMovieClip();
 		var x:Number = modalMC._width / 4;
 		var y:Number = modalMC._height - 10;
