@@ -497,12 +497,12 @@ class com.boobar.SpellList implements ITabPane
 		if (m_currentGroup != null)
 		{
 			UnloadDialogs();
-			m_editGroupDialog = new EditGroupDialog("EditGroup", m_parent, m_parentWidth, m_parentHeight, m_currentGroup.GetName(), m_currentGroup.GetColourName(), m_currentGroup.GetScreenFlash());
+			m_editGroupDialog = new EditGroupDialog("EditGroup", m_parent, m_parentWidth, m_parentHeight, m_currentGroup.GetName(), m_currentGroup.GetColourName(), m_currentGroup.GetScreenFlash(), m_currentGroup.GetHideBar());
 			m_editGroupDialog.Show(Delegate.create(this, EditGroupCB));
 		}
 	}
 	
-	private function EditGroupCB(newName:String, newColour:String, screenFlash:Boolean):Void
+	private function EditGroupCB(newName:String, newColour:String, screenFlash:Boolean, hideBar:Boolean):Void
 	{
 		if (newName != null)
 		{
@@ -525,6 +525,7 @@ class com.boobar.SpellList implements ITabPane
 					m_currentGroup.SetName(newName);
 					m_currentGroup.SetColourName(newColour);
 					m_currentGroup.SetScreenFlash(screenFlash);
+					m_currentGroup.SetHideBar(hideBar);
 					DrawList();
 				}
 				else
@@ -543,12 +544,12 @@ class com.boobar.SpellList implements ITabPane
 		if (m_currentGroup != null)
 		{
 			UnloadDialogs();
-			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, m_parentWidth, m_parentHeight, "", Colours.GetDefaultColourName(), false);
+			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, m_parentWidth, m_parentHeight, "", Colours.GetDefaultColourName(), false, false);
 			m_editGroupDialog.Show(Delegate.create(this, AddGroupAboveCB));
 		}
 	}
 	
-	private function AddGroupAboveCB(newName:String, newColour:String, screenFlash:Boolean):Void
+	private function AddGroupAboveCB(newName:String, newColour:String, screenFlash:Boolean, hideBar:Boolean):Void
 	{
 		if (newName != null)
 		{
@@ -569,7 +570,7 @@ class com.boobar.SpellList implements ITabPane
 				if (duplicateFound == false)
 				{
 					var newID:String = BarGroup.GetNextID(m_groups);
-					var newGroup:BarGroup = new BarGroup(newID, newName, newColour, screenFlash);
+					var newGroup:BarGroup = new BarGroup(newID, newName, newColour, screenFlash, hideBar);
 					var indx:Number = BarGroup.GetGroupIndex(m_groups, m_currentGroup.GetID());
 					m_groups.splice(indx, 0, newGroup);
 					DrawList();
@@ -590,12 +591,12 @@ class com.boobar.SpellList implements ITabPane
 		if (m_currentGroup != null)
 		{
 			UnloadDialogs();
-			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, m_parentWidth, m_parentHeight, "", Colours.GetDefaultColourName(), false);
+			m_editGroupDialog = new EditGroupDialog("AddGroupAbove", m_parent, m_parentWidth, m_parentHeight, "", Colours.GetDefaultColourName(), false, false);
 			m_editGroupDialog.Show(Delegate.create(this, AddGroupBelowCB));
 		}
 	}
 	
-	private function AddGroupBelowCB(newName:String, newColour:String, screenFlash:Boolean):Void
+	private function AddGroupBelowCB(newName:String, newColour:String, screenFlash:Boolean, hideBar:Boolean):Void
 	{
 		if (newName != null)
 		{
@@ -616,7 +617,7 @@ class com.boobar.SpellList implements ITabPane
 				if (duplicateFound == false)
 				{
 					var newID:String = BarGroup.GetNextID(m_groups);
-					var newGroup:BarGroup = new BarGroup(newID, newName, newColour, screenFlash);
+					var newGroup:BarGroup = new BarGroup(newID, newName, newColour, screenFlash, hideBar);
 					var indx:Number = BarGroup.GetGroupIndex(m_groups, m_currentGroup.GetID());
 					m_groups.splice(indx + 1, 0, newGroup);
 					DrawList();

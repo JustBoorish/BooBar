@@ -79,7 +79,15 @@ class com.boobar.Castbar
 			for (var indx:Number = 0; indx < groups.length; ++indx)
 			{
 				var thisGroup:BarGroup = groups[indx];
-				m_bars.push(CreateBar("Bar" + thisGroup.GetID(), width, height, Colours.GetColourArray(thisGroup.GetColourName())));
+				if (thisGroup.GetHideBar() == true)
+				{
+					m_bars.push(null);
+				}
+				else
+				{
+					m_bars.push(CreateBar("Bar" + thisGroup.GetID(), width, height, Colours.GetColourArray(thisGroup.GetColourName())));
+				}
+				
 				if (thisGroup.GetScreenFlash() == true)
 				{
 					m_flashes.push(new ScreenFlash("Flash" + thisGroup.GetID(), parent, 2.5, Colours.GetColourArray(thisGroup.GetColourName())));
@@ -206,76 +214,99 @@ class com.boobar.Castbar
 		{
 			HideAllBars();
 			
-			var thisBar:MovieClip = FindBar(canInterrupt, currentSpell, npc);
-			if (thisBar != null)
+			var thisGroup:Number = FindBarIndex(canInterrupt, currentSpell, npc);
+			if (thisGroup == null)
 			{
-				thisBar._visible = true;
+				SetVisible(false);
 			}
-			
-			if (m_lastSpellName != currentSpell)
+			else
 			{
-				m_lastSpellName = currentSpell;
-				if (m_spellTextField != null)
+				if (m_bars[thisGroup] != null)
 				{
-					m_spellTextField.removeTextField();
+					m_bars[thisGroup]._visible = true;
 				}
 				
-				var extents:Object = Text.GetTextExtent(m_lastSpellName, m_textFormat, m_frame);
-				m_spellTextField = Graphics.DrawText("SpellLabel", m_frame, m_lastSpellName, m_textFormat, m_frame._width / 2 - extents.width / 2, m_frame._height / 2 - extents.height / 2, extents.width, extents.height);
-			}
-			
-			if (m_showNpcName == true && m_lastNpcName != npc)
-			{
-				RemoveNpcName();
-				
-				if (npc != "")
+				if (m_lastSpellName != currentSpell)
 				{
-					m_lastNpcName = npc;
-					var extents:Object = Text.GetTextExtent(m_lastNpcName, m_textFormat, m_parent);
-					m_npcTextField = Graphics.DrawText("NpcLabel", m_parent, m_lastNpcName, m_textFormat, m_frame._x - 10 - extents.width, m_frame._y + m_frame._height / 2 - extents.height / 2, extents.width, extents.height);
+					m_lastSpellName = currentSpell;
+					if (m_spellTextField != null)
+					{
+						m_spellTextField.removeTextField();
+					}
+					
+					var extents:Object = Text.GetTextExtent(m_lastSpellName, m_textFormat, m_frame);
+					m_spellTextField = Graphics.DrawText("SpellLabel", m_frame, m_lastSpellName, m_textFormat, m_frame._width / 2 - extents.width / 2, m_frame._height / 2 - extents.height / 2, extents.width, extents.height);
+				}
+				
+				if (m_showNpcName == true && m_lastNpcName != npc)
+				{
+					RemoveNpcName();
+					
+					if (npc != "")
+					{
+						m_lastNpcName = npc;
+						var extents:Object = Text.GetTextExtent(m_lastNpcName, m_textFormat, m_parent);
+						m_npcTextField = Graphics.DrawText("NpcLabel", m_parent, m_lastNpcName, m_textFormat, m_frame._x - 10 - extents.width, m_frame._y + m_frame._height / 2 - extents.height / 2, extents.width, extents.height);
+					}
+				}
+				
+				m_scaleFrame._width = (m_scaleWidth * pct);
+				
+				m_hideCastbarID = setTimeout(Delegate.create(this, HideCastbar), 750);
+				
+				if (m_bars[thisGroup] != null)
+				{
+					SetVisible(true);
+				}
+				else
+				{
+					SetVisible(false);
+					if (m_flashes[thisGroup] != null)
+					{
+						m_flashes[thisGroup].SetVisible(true);
+					}
 				}
 			}
-			
-			m_scaleFrame._width = (m_scaleWidth * pct);
-			
-			m_hideCastbarID = setTimeout(Delegate.create(this, HideCastbar), 750);
-			
-			SetVisible(true);
 		}
 	}
 	
-	private function FindBar(canInterrupt:Boolean, spellName:String, npc:String):MovieClip
+	private function FindBarIndex(canInterrupt:Boolean, spellName:String, npc:String):Number
 	{
-		var ret:MovieClip = null;
+		var ret:Number = null;
 		var spellDictionary:Object = m_spellLookup[spellName];
 		if (spellDictionary == null)
 		{
 			if (canInterrupt == true)
 			{
-				ret = m_bars[INTERRUPT_BAR];
+				ret = INTERRUPT_BAR;
 			}
 			else
 			{
-				ret = m_bars[NO_INTERRUPT_BAR];
+				ret = NO_INTERRUPT_BAR;
 			}
 		}
 		else
 		{
-			ret = spellDictionary[npc];
-			if (ret == null)
+			var thisBar:Number = spellDictionary[npc];
+			if (thisBar == null)
 			{
-				ret = spellDictionary[BLANK_NPC];
-				if (ret == null)
+				thisBar = spellDictionary[BLANK_NPC];
+				if (thisBar == null)
 				{
 					if (canInterrupt == true)
 					{
-						ret = m_bars[INTERRUPT_BAR];
+						ret = INTERRUPT_BAR;
 					}
 					else
 					{
-						ret = m_bars[NO_INTERRUPT_BAR];
+						ret = NO_INTERRUPT_BAR;
 					}
 				}
+			}
+			
+			if (thisBar != null)
+			{
+				ret = thisBar;
 			}
 		}
 		
@@ -291,7 +322,7 @@ class com.boobar.Castbar
 			if (thisSpell != null)
 			{
 				var groupIndex:Number = BarGroup.GetGroupIndex(m_groups, thisSpell.GetGroup());
-				if (groupIndex != null && m_bars[groupIndex] != null)
+				if (groupIndex != null)
 				{
 					var spellDictionary:Object;
 					if (m_spellLookup[thisSpell.GetName()] == null)
@@ -310,7 +341,7 @@ class com.boobar.Castbar
 						npcName = BLANK_NPC;
 					}
 					
-					spellDictionary[npcName] = m_bars[groupIndex];
+					spellDictionary[npcName] = groupIndex;
 				}
 			}
 		}

@@ -28,18 +28,21 @@ class com.boobar.EditGroupDialog
 	private var m_groupName:String;
 	private var m_colourName:String;
 	private var m_screenFlash:Boolean;
+	private var m_hideBar:Boolean;	
 	private var m_menu:MenuPanel;
 	private var m_callback:Function;
 	private var m_input:TextField;
 	private var m_colourX:Number;
 	private var m_colourY:Number;
 	private var m_flashCheck:Checkbox;
+	private var m_hideCheck:Checkbox;
 	
-	public function EditGroupDialog(name:String, parent:MovieClip, parentWidth:Number, parentHeight:Number, groupName:String, colourName:String, screenFlash:Boolean) 
+	public function EditGroupDialog(name:String, parent:MovieClip, parentWidth:Number, parentHeight:Number, groupName:String, colourName:String, screenFlash:Boolean, hideBar:Boolean) 
 	{
 		m_groupName = groupName;
 		m_colourName = colourName;
 		m_screenFlash = screenFlash;
+		m_hideBar = hideBar;
 		
 		m_modalBase = new ModalBase(name, parent, Delegate.create(this, DrawControls), parentWidth, parentHeight, parentWidth * 0.7, parentHeight * 0.95);
 		var modalMC:MovieClip = m_modalBase.GetMovieClip();
@@ -105,6 +108,14 @@ class com.boobar.EditGroupDialog
 		Graphics.DrawText("Line2", modalMC, text2, m_textFormat, 40 + checkSize, y + checkSize / 2 - hiddenExtents.height / 2, hiddenExtents.width, hiddenExtents.height);
 		y += hiddenExtents.height + 10;
 		
+		m_hideCheck = new Checkbox("HideCheck", modalMC, 30, y, checkSize, null, m_hideBar);
+	
+		var text3:String = "Hide bar";
+		var hiddenExtents2:Object;
+		hiddenExtents2 = Text.GetTextExtent(text3, m_textFormat, modalMC);
+		Graphics.DrawText("Line2", modalMC, text3, m_textFormat, 40 + checkSize, y + checkSize / 2 - hiddenExtents2.height / 2, hiddenExtents2.width, hiddenExtents2.height);
+		y += hiddenExtents2.height + 10;
+		
 		m_colourX = 30;
 		m_colourY = y;
 		BuildMenu(modalMC, m_colourX, m_colourY);
@@ -161,11 +172,11 @@ class com.boobar.EditGroupDialog
 		{
 			if (success)
 			{
-				m_callback(m_input.text, m_colourName, m_flashCheck.IsChecked());
+				m_callback(m_input.text, m_colourName, m_flashCheck.IsChecked(), m_hideCheck.IsChecked());
 			}
 			else
 			{
-				m_callback(null, null, false);
+				m_callback(null, null, false, false);
 			}
 		}
 	}

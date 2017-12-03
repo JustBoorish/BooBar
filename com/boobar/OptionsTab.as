@@ -129,7 +129,7 @@ class com.boobar.OptionsTab implements ITabPane
 	{
 		var textFormat:TextFormat = Graphics.GetTextFormat();
 
-		var sizes:Array = [ "10", "12", "14", "16", "18", "20", "24", "28", "32" ];
+		var sizes:Array = [ "6", "8", "10", "12", "14", "16", "18", "20", "24", "28", "32" ];
 		var text:String = "Bar font size";
 		var extents:Object = Text.GetTextExtent(text, textFormat, m_frame);
 		Graphics.DrawText("FontSizeText", m_frame, text, textFormat, 25, 35 - extents.height / 2, extents.width, extents.height);

@@ -37,7 +37,7 @@ import com.boobarcommon.Proxy;
  */
 class com.boobar.Controller extends MovieClip
 {
-	private static var VERSION:String = "1.1";
+	private static var VERSION:String = "1.2";
 	private static var SETTINGS_PREFIX:String = "BOOBAR";
 	private static var MAX_GROUPS:Number = 75;
 	private static var MAX_SPELLS:Number = 250;

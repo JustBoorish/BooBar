@@ -28,18 +28,21 @@ class com.boobar.BarGroup
 	private static var NAME_PREFIX:String = "Name";
 	private static var COLOUR_PREFIX:String = "Colour";
 	private static var FLASH_PREFIX:String = "Flash";
+	private static var HIDE_BAR_PREFIX:String = "HideBar";
 	
 	private var m_id:String;
 	private var m_name:String;
 	private var m_colourName:String;
 	private var m_screenFlash:Boolean;
+	private var m_hideBar:Boolean;
 
-	public function BarGroup(id:String, name:String, colourName:String, screenFlash:Boolean)
+	public function BarGroup(id:String, name:String, colourName:String, screenFlash:Boolean, hideBar:Boolean)
 	{
 		m_id = id;
 		m_colourName = colourName;
 		SetName(name);
 		m_screenFlash = screenFlash;
+		m_hideBar = hideBar;
 	}
 
 	public static function GetNextID(groups:Array):String
@@ -155,6 +158,16 @@ class com.boobar.BarGroup
 		m_screenFlash = newValue;
 	}
 	
+	public function GetHideBar():Boolean
+	{
+		return m_hideBar;
+	}
+	
+	public function SetHideBar(newValue:Boolean):Void
+	{
+		m_hideBar = newValue;
+	}
+	
 	public function Save(archive:Archive, groupNumber:Number):Void
 	{
 		var prefix:String = GROUP_PREFIX + groupNumber;
@@ -172,6 +185,17 @@ class com.boobar.BarGroup
 			tempFlash = "0";
 		}
 		SetArchiveEntry(prefix, archive, BarGroup.FLASH_PREFIX, tempFlash);
+		
+		var tempHide:String;
+		if (m_hideBar == true)
+		{
+			tempHide = "1";
+		}
+		else
+		{
+			tempHide = "0";
+		}
+		SetArchiveEntry(prefix, archive, BarGroup.HIDE_BAR_PREFIX, tempHide);
 	}
 	
 	public static function FromArchive(archive:Archive, groupNumber:Number):BarGroup
@@ -186,7 +210,9 @@ class com.boobar.BarGroup
 			if (colourName == "Gray") colourName = Colours.GREY; // TEMP
 			var tempFlash:String = GetArchiveEntry(prefix, archive, BarGroup.FLASH_PREFIX, "0");
 			var screenFlash:Boolean = tempFlash == "1";
-			ret = new BarGroup(id, name, colourName, screenFlash);
+			var tempHide:String = GetArchiveEntry(prefix, archive, BarGroup.HIDE_BAR_PREFIX, "0");
+			var hideBar:Boolean = tempHide == "1";
+			ret = new BarGroup(id, name, colourName, screenFlash, hideBar);
 		}
 		
 		return ret;
@@ -199,6 +225,7 @@ class com.boobar.BarGroup
 		DeleteArchiveEntry(prefix, archive, BarGroup.NAME_PREFIX);
 		DeleteArchiveEntry(prefix, archive, BarGroup.COLOUR_PREFIX);
 		DeleteArchiveEntry(prefix, archive, BarGroup.FLASH_PREFIX);
+		DeleteArchiveEntry(prefix, archive, BarGroup.HIDE_BAR_PREFIX);
 	}
 
 	private static function DeleteArchiveEntry(prefix:String, archive:Archive, key:String):Void

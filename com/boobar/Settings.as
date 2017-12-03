@@ -264,7 +264,7 @@ class com.boobar.Settings
 	
 	public static function SetBarFontSize(settings:Object, barNumber:Number, newSize:Number):Void
 	{
-		if (settings != null && newSize != null && !isNaN(newSize) && newSize >= 14)
+		if (settings != null && newSize != null && !isNaN(newSize) && newSize >= 6)
 		{
 			settings[BAR_FONT_SIZE + barNumber] = newSize;
 		}

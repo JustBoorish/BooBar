@@ -18,6 +18,11 @@ Delete the BooBar directory from \Data\Gui\Customized\Flash\
 
 Change Log
 
+Version 1.2
+- Allow a group to turn on/off screen flash and separately turn on/off castbar visibility
+- Add some smaller font sizes
+- Fix bug making minimum bar size 14
+
 Version 1.1
 - Bug fix options tab to allow user to drag bar location
 
